@@ -1,5 +1,13 @@
 # MacOS set-up tutorial
 
+In this tutorial you will learn how to build and upload the NuttX OS on your ESP32 Sparrow boards. The Sparrow board is custom-made, built on the ESP32 Wrover module by adding:
+
+- LTR308 light sensor
+- BME680 temperature, humidity and pressure sensor
+- SSD1306 128x32 OLED display
+- I2S microphone
+- microSD card reader
+
 ## Install necessary packages:
 
 ```
@@ -40,6 +48,8 @@ cd nuttx
 make menuconfig
 make
 ```
+
+Please not that if you are compiling for another target hardware, such as the popular WROOM module, you need to use `./tools/configure.sh esp32-devkitc:nsh`. Alternatively, since Sparrow boards are built upon the WROVER module, you can also use `./tools/configure.sh esp32-wrover-kit:nsh`. However, in this case you would have to manually enable the support for various peripherals using NuttX's `make menuconfig`.
 
 ## Download bootloader and partition table:
 

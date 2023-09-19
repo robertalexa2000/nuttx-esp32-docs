@@ -1,5 +1,13 @@
 # Linux set-up tutorial
 
+In this tutorial you will learn how to build and upload the NuttX OS on your ESP32 Sparrow boards. The Sparrow board is custom-made, built on the ESP32 Wrover module by adding:
+
+- LTR308 light sensor
+- BME680 temperature, humidity and pressure sensor
+- SSD1306 128x32 OLED display
+- I2S microphone
+- microSD card reader
+
 ## Environment
 
 ### Native Linux machine
@@ -84,12 +92,14 @@ Please be aware that, depending on the board version, you might be required to p
 pip3 install esptool
 pip3 install pyserial
 cd ~/nuttxspace/nuttx
-./tools/configure.sh esp32-devkitc:nsh
+./tools/configure.sh esp32-sparrow-kit:nsh
 make -j4
 esptool.py erase_flash
 make flash ESPTOOL_PORT=/dev/ttyUSB0 ESPTOOL_BAUD=115200 ESPTOOL_BINDIR=../esp-bins
 picocom /dev/ttyUSB0 -b 115200
 ```
+
+Please not that if you are compiling for another target hardware, such as the popular WROOM module, you need to use `./tools/configure.sh esp32-devkitc:nsh`. Alternatively, since Sparrow boards are built upon the WROVER module, you can also use `./tools/configure.sh esp32-wrover-kit:nsh`. However, in this case you would have to manually enable the support for various peripherals using NuttX's `make menuconfig`.
 
 Flashing the board could be also done by using `esptool.py --chip esp32 --port /dev/ttyUSB0 --baud 921600 write_flash 0x1000 ../esp-bins/bootloader-esp32.bin 0x8000 ../esp-bins/partition-table-esp32.bin 0x10000 nuttx.bin`.
 
