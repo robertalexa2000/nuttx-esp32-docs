@@ -64,7 +64,8 @@ apt-get install -y bison flex gettext texinfo libncurses5-dev libncursesw5-dev g
 ### Descarcarea toolchain-ului
 
 ```
-curl https://dl.espressif.com/dl/xtensa-esp32-elf-gcc8_2_0-esp-2020r2-linux-amd64.tar.gz | tar -xz
+wget https://github.com/espressif/crosstool-NG/releases/download/esp-12.2.0_20230208/xtensa-esp32-elf-12.2.0_20230208-x86_64-linux-gnu.tar.xz
+tar -xf xtensa-esp32-elf-12.2.0_20230208-x86_64-linux-gnu.tar.xz
 mkdir /opt/xtensa
 mv xtensa-esp32-elf/ /opt/xtensa/
 echo "export PATH=\$PATH:/opt/xtensa/xtensa-esp32-elf/bin" >> ~/.bashrc
@@ -106,12 +107,14 @@ In functie de tipul de placuta pe care rulati, este posibil sa fie nevoie sa apa
 pip3 install esptool
 pip3 install pyserial
 cd ~/nuttxspace/nuttx
-./tools/configure.sh esp32-sparrow-kit:nsh
+./tools/configure.sh -l esp32-sparrow-kit:nsh
 make -j4
 esptool.py erase_flash
 make flash ESPTOOL_PORT=/dev/ttyUSB0 ESPTOOL_BAUD=115200 ESPTOOL_BINDIR=../esp-bins
 picocom /dev/ttyUSB0 -b 115200
 ```
+
+In cazul in care sistemul de build nu detecteaza in mod automat calea catre repo-ul de apps, aceasta poate fi specificata prin `-a ../apps`. Pentru toti parametri disponibili puteti folosi `./tools/configure.sh -h`. Alternativ, calea catre directorul de apps poate fi configurata prin CONFIG_APPSDIR.
 
 Daca compilati pentru un alt tip de placuta ESP32 - pentru un modul WROOM, de exemplu - trebuie sa folositi `./tools/configure.sh esp32-devkitc:nsh`. De asemenea, deoarece placutele Sparrow sunt construite peste modulul WROVER, puteti sa folositi si `./tools/configure.sh esp32-wrover-kit:nsh`. Insa in acest caz va trebui sa configurati manual NuttX-ul prin `make menuconfig` astfel incat sa puteti folosi componentele hardware adaugate pe Sparrow.
 
@@ -129,10 +132,12 @@ In final, ar trebui sa obtineti si un log de boot asemanator cu cel din screensh
   <img src="images/nuttx_boot_log.png" alt="drawing" width="600" height="500"/>
 </p>
 
-## Exercitiu
+## Exercitii
 
-Folosind sistemul de build al NuttX, activati compilarea aplicatiei "Hello, World!". Odata incarcat pe placuta, rulati aplicatia din linie de comanda.
+1. Folosind sistemul de build al NuttX, activati compilarea aplicatiei "Hello, World!". Odata incarcat pe placuta, rulati aplicatia din linie de comanda.
 
 Hint:
 - pentru a putea compila "Hello, World!" trebuie sa activati config-ul CONFIG_EXAMPLES_HELLO folosind `make menuconfig`.
 - odata compilat si incarcat NuttX, utilizati comanda `?` pentru a vedea cum se poate rula aplicatia.
+
+2. Asemanator exercitiului anterior, compilati si incarcati aplicatia "rgbled" din `apps/examples/rgbled`. **Bonus** - faceti led-ul sa clipeasca o data pe secunda in rosu, verde, albastru.
